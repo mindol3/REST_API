@@ -5,6 +5,8 @@ import model.NewsDAO;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.*;
 import javax.servlet.annotation.MultipartConfig;
@@ -92,6 +94,17 @@ public class NewsController extends HttpServlet{
 	private String getFilname(Part part) {
 		/* Part 객체를 사용해 multipart 헤더에서 파일이름 추출 */
 		String fileName = null;
+		// 파일 이름이 들어 있는 헤더 영역을 가져옴
+		// 파일이름이 들어잇는 헤더 영역을 가지고 오
+		String header = part.getHeader("content-disposition");
+		// part.getHeader -> form-data; name="file", filename="사진5.jpg"
+		ctx.log(" File Header : " + header);
+		
+		// 파일이름이 들어있는 속성 부분의 시작위치를 가져와 쌍따옴표 사이의 값 부분만 가지고옴
+		int start = header.indexOf("filename=");
+		fileName = header.substring(start + 10, header.length()-1);
+		ctx.log("파일명:" + fileName);
+		return fileName;
 	}
 	
 	public String addNews(HttpServletRequest req) {
@@ -118,6 +131,50 @@ public class NewsController extends HttpServlet{
 		}
 		return "redirect:/news.nhn?action=listNews";
 	}
+	
+	public String listNews(HttpServletRequest req) {
+		/* newsList.jsp에서 뉴스 목록을 보여주기 위한 요청을 처리하는 메서드 */
+		List<News> list;
+		try {
+			list = dao.getAll();
+			req.setAttribute("newslist", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ctx.log("뉴스 목록 생성 과정에서 문제 발생");
+			req.setAttribute("error", "뉴스 목록이 정상적으로 처리되지 않았습니다.");
+		}
+		return "./newsList.jsp";
+	}
+	
+	public String getNews(HttpServletRequest req) {
+		/* 특정 뉴스 기사를 클릭햇을 때 호출하기 위한 요청을 처리하는 메서드 */
+		int aid = Integer.parseInt(req.getParameter("aid"));
+		try {
+			News n = dao.getNews(aid);
+			req.setAttribute("news", n);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ctx.log("뉴스 목록 생성 과정에서 문제 발생");
+			req.setAttribute("error", "뉴스를 정상적으로 가져오지 못했습니다.");
+		}
+		return "./newsView.jsp";
+	}
+	
+	public String deleteNews(HttpServletRequest req) {
+		int aid = Integer.parseInt(req.getParameter("aid"));
+		try {
+			dao.delNews(aid);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			ctx.log("뉴스 목록 생성 과정에서 문제 발생");
+			req.setAttribute("error", "뉴스를 정상적으로 삭제하지 못했습니다.");
+			return listNews(req);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return "redirect:/news.nhn?action=listNews";
+	}
+	
 }
 
 	

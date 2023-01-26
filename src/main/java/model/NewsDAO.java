@@ -29,7 +29,7 @@ public class NewsDAO {
 		/* 뉴스를 추가하는 메서드 */
 		Connection connection = open();
 		
-		String sql = "INSERT INTO news (title, img, date, content) VALUES (?, ?, noew(), ?) ";
+		String sql = "INSERT INTO news (title, img, date, content) VALUES (?, ?, now(), ?) ";
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		
 		// try-with-resource 기법이 적용된 부분으로 해당 리소스를 자동으로 close
