@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" version="4.0">
+  <display-name>TEST</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <context-param>
+  	<param-name>encoding</param-name>
+  	<param-value>UTF-8</param-value>
+  </context-param>
+  <filter>
+  	<filter-name>Filter01</filter-name>
+  	<filter-class>filter.AuthFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>Filter01</filter-name>
+  	<url-pattern>/filter/filter01_process.jsp</url-pattern>
+  </filter-mapping>
+  
+    <filter>
+  	<filter-name>Filter02</filter-name>
+  	<filter-class>filter.InitParamFilter</filter-class>
+  	<init-param>
+  		<param-name>param1</param-name>
+  		<param-value>admin</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>param2</param-name>
+  		<param-value>1234</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>Filter02</filter-name>
+  	<url-pattern>/filter/filter02_process.jsp</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+  	<filter-name>Filter02_02</filter-name>
+  	<filter-class>filter.LogFileFilter</filter-class>
+  	<init-param>
+  		<param-name>filename</param-name>
+  		<param-value>c:\\logs\\monitor.log</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>Filter02_02</filter-name>
+  	<url-pattern>/filter/filter02_process.jsp</url-pattern>
+  </filter-mapping>
+  
+  <context-param>
+  	<param-name>propfile</param-name>
+  	<param-value>c:/tmp/my.conf</param-value>
+  </context-param>
+  
+  <filter>
+  	<filter-name>LoginFilter</filter-name>
+  	<filter-class>filter.LoginCheckFilter</filter-class>
+  		<init-param>
+  		<param-name>param3</param-name>
+  		<param-value>jms</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>param4</param-name>
+  		<param-value>1234</param-value>
+  	</init-param>
+  	</filter>
+  	 <filter-mapping>
+  	<filter-name>LoginFilter</filter-name>
+  	<url-pattern>/filter/LoginForm_process.jsp</url-pattern>
+  </filter-mapping>
+  
+</web-app>
