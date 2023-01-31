@@ -1,5 +1,8 @@
 package model;
 
+import lombok.Data;
+
+@Data
 public class News {
 	private int aid;
 	private String title;
